@@ -1,0 +1,18 @@
+.bg-dark {
+    background-color: #6960F1!important;
+}
+
+input {
+    background-color: black;
+}
+
+.extra-rounded {
+    border-radius: 30px;
+}
+
+.rounded {
+    height: 50px;
+    width: 50px;
+    border-radius: 100rem!important;
+    margin-right: 10px;
+}
