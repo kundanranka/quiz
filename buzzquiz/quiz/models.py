@@ -1,5 +1,4 @@
-from __future__ import unicode_literals
-
+from tabnanny import verbose
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
@@ -7,6 +6,8 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from .manager import UserManager
+from django.utils.crypto import get_random_string
+from tinymce.models import HTMLField
 
 
 class Users(AbstractBaseUser, PermissionsMixin):
@@ -40,3 +41,39 @@ class Users(AbstractBaseUser, PermissionsMixin):
         Returns the short name for the user.
         '''
         return self.first_name
+class Quiz(models.Model):
+    createdBy = models.ForeignKey(Users, on_delete=models.CASCADE,related_name='quiz_createdBy')
+    name = models.CharField(max_length=100,null=False,blank=False)
+    id = models.CharField(max_length=100,null=False,blank=False,primary_key=True,default=get_random_string(5))
+    description = models.CharField(max_length=500,null=False,blank=False)
+    start_date = models.DateField()
+    start_time = models.TimeField()
+    end_date = models.DateField()
+    end_time = models.TimeField()
+    duration = models.IntegerField(null=False,blank=False)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return str(self.createdBy) + " - " + self.id
+
+type = (
+    ("Single Correct","SINGLE_CORRECT"),
+    ("Multiple Correct","MULTIPLE_CORRECT"),
+)
+class Questions(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='question_quiz')
+    question = HTMLField(null=False,blank=False)
+    duration = models.IntegerField(null=False,blank=False)
+    type = models.CharField(max_length=100,null=False,blank=False,choices=type)
+    mark = models.IntegerField(null=False,blank=False)
+    negative_mark = models.IntegerField(null=False,blank=False,default=0)
+
+class Options(models.Model):
+    question = models.ForeignKey(Questions, on_delete=models.CASCADE,related_name='option_question')
+    option = models.CharField(max_length=100,null=False,blank=False)
+    is_correct = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('option')
+        verbose_name_plural = _('options')

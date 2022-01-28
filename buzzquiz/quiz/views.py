@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+
+from .models import Questions
 from .forms import RegistrationFormInstructor, UserLoginForm, RegistrationFormStudent
 from django.contrib.auth.decorators import user_passes_test
 
@@ -13,7 +15,9 @@ def home(request):
 
 @login_required()
 def user_home(request):
-    context = {}
+    context = {
+        "questions" : Questions.objects.all()
+    }
     return render(request, 'quiz/home.html', context=context)
 
 def is_auth(user):

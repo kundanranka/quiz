@@ -1,6 +1,9 @@
 from django.conf.urls import url
 from . import views
+from django.contrib import admin
 
+admin.autodiscover()
+admin.site.enable_nav_sidebar = False
 app_name = 'quiz'
 
 urlpatterns = [
