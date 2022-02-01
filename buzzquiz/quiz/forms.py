@@ -80,9 +80,9 @@ class RegistrationFormInstructor(UserCreationForm):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         user.email = self.cleaned_data["email"]
-
-        if not user.groups.filter(name="instructors").exists():
-            user.groups.add(Group.objects.get(name="instructors"))
         if commit:
             user.save()
+        Group.objects.get_or_create(name ='instructors')
+        if not user.groups.filter(name="instructors").exists():
+            user.groups.add(Group.objects.get(name="instructors"))
         return user

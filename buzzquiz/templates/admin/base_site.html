@@ -1,3 +1,12 @@
- {% extends "admin/base.html" %} {% block title %}TechniQ Quizz Administration{% endblock %} {% block branding %}
+{% extends "admin/base.html" %} 
+{% load static %}
+{% block title %}TechniQ Quizz Administration{% endblock %}
+
+{% block branding %}
 <h1 id="site-name"><a href="{% url 'admin:index' %}">TechniQ Quizz Administration</a></h1>
 {% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'django_light/django_light.css' %}" />
+{% endblock extrastyle %}

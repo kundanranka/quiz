@@ -8,7 +8,7 @@ from nested_inline.admin import (
     NestedTabularInline,
 )
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
+from django.shortcuts import redirect
 
 
 class UsersAdmin(BaseUserAdmin):
@@ -46,10 +46,16 @@ class QuestionsInline(NestedStackedInline):
 
 class QuizAdmin(NestedModelAdmin):
     list_filter = ("is_active",)
-    search_fields = ("name", "createdBy")
-    readonly_fields = ("created_at", "id", "createdBy")
+    search_fields = ("name",)
+    readonly_fields = ("id","createdBy")
+    exclude = []
     model = Quiz
     inlines = [QuestionsInline]
+
+    def get_exclude(self, request, obj):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        return list(super().get_exclude(request, obj)).extend(['createdBy','created_at'])
 
     def save_model(self, request, obj, form, change):
         if not obj.pk and request.user.groups.filter(name='instructors').exists():
@@ -62,6 +68,8 @@ class QuizAdmin(NestedModelAdmin):
             return qs
         return qs.filter(createdBy=request.user)
 
+    def response_add(self, request, obj, post_url_continue=None):
+        return redirect('/user-home')
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Users, UsersAdmin)
