@@ -13,6 +13,7 @@
 {% block extrahead %}{% endblock %}
 {% block responsive %}
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
     {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
 {% endblock %}
@@ -27,7 +28,24 @@
 <div id="container">
 
     {% if not is_popup %}
-
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
+        </div>
+        {% block usertools %}
+        {% if has_permission %}
+        <div class="collapse navbar-collapse justify-content-end " id="navbar">
+                
+          <h6 class="text-white mt-2 mr-2">Welcome, 21mx110@gmail.com | </h6>
+          <img src="https://avatars.dicebear.com/api/miniavs/21mx110@gmail.com.svg" class="img-thumbnail rounded"> 
+          <a href="/logout/" class="btn btn-danger mt-1 mx-1">Log Out <i class="fa fa-sign-out" aria-hidden="true"></i></a> 
+      </div>
+        {% endif %}
+        {% endblock %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
     {% endif %}
 
     <div class="main shifted" id="main">

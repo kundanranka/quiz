@@ -3,10 +3,18 @@
 {% block title %}TechniQ Quizz Administration{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">TechniQ Quizz Administration</a></h1>
+<h1>
+    <a href="{% url 'quiz:home' %}" class="navbar-brand">
+        TechniQ Quizz
+        {% if request.user.is_instructor %}
+            - Instructor
+        {% endif %}
+        </a>
+</h1>
 {% endblock %}
 
 {% block extrastyle %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'django_light/django_light.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock extrastyle %}
