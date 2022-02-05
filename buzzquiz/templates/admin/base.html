@@ -37,8 +37,8 @@
         {% if has_permission %}
         <div class="collapse navbar-collapse justify-content-end " id="navbar">
                 
-          <h6 class="text-white mt-2 mr-2">Welcome, 21mx110@gmail.com | </h6>
-          <img src="https://avatars.dicebear.com/api/miniavs/21mx110@gmail.com.svg" class="img-thumbnail rounded"> 
+          <h6 class="text-white mt-2 mr-2">Welcome, {{ request.user.email }} | </h6>
+          <img src="https://avatars.dicebear.com/api/miniavs/{{ request.user.email }}.svg" class="img-thumbnail rounded"> 
           <a href="/logout/" class="btn btn-danger mt-1 mx-1">Log Out <i class="fa fa-sign-out" aria-hidden="true"></i></a> 
       </div>
         {% endif %}
