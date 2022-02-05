@@ -6,6 +6,7 @@ django-light==0.1.0.post3
 django-model-utils==4.2.0
 django-nested-inline==0.4.4
 django-summernote==0.8.20.0
+django-tinymce==3.4.0
 packaging==21.3
 Pillow==8.1.1
 pyparsing==3.0.7
