@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^logout/', views.logout_view, name='logout'),
     url(r'^register/', views.register_student, name='register'),
     url(r'^register-instructor/', views.register_instructor, name='register-instructor'),
-
+    url(r'^enroll/', views.RegQuizenroll, name='enroll'),
 ]

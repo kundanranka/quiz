@@ -6,7 +6,6 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from .manager import UserManager
-from django.utils.crypto import get_random_string
 from tinymce.models import HTMLField
 
 
@@ -44,7 +43,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
 class Quiz(models.Model):
     createdBy = models.ForeignKey(Users, on_delete=models.CASCADE,related_name='quiz_createdBy')
     name = models.CharField(max_length=100,null=False,blank=False)
-    id = models.CharField(max_length=100,null=False,blank=False,primary_key=True,default=get_random_string(5))
+    id = models.CharField(max_length=100,null=False,blank=False,primary_key=True)
     description = models.CharField(max_length=500,null=False,blank=False)
     start_date = models.DateField()
     start_time = models.TimeField()
@@ -77,3 +76,12 @@ class Options(models.Model):
     class Meta:
         verbose_name = _('option')
         verbose_name_plural = _('options')
+        
+
+class QuizEnroll(models.Model):
+    quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='quiz_id')
+    student_id = models.ForeignKey(Users, on_delete=models.CASCADE,related_name='student_id')
+ 
+    class Meta:
+        verbose_name = _('Enrollment')
+        verbose_name_plural = _('Enrollments')

@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
 from .models import Questions
-from .forms import RegistrationFormInstructor, UserLoginForm, RegistrationFormStudent
+from .forms import RegQuizenrolls, RegistrationFormInstructor, UserLoginForm, RegistrationFormStudent
 from django.contrib.auth.decorators import user_passes_test
 
 def home(request):
@@ -64,3 +64,17 @@ def register_instructor(request):
 def logout_view(request):
     logout(request)
     return redirect('/')
+
+@login_required()
+def RegQuizenroll(request):
+    title = "Enroll Quiz"
+    if request.method == 'POST':
+        form = RegQuizenrolls(request.user,request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = RegQuizenrolls(request.user)
+    context = {'form': form, 'title': title}
+    return render(request, 'quiz/enroll.html', context=context)
+

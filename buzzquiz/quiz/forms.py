@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import Group
+from .models import Quiz, QuizEnroll
 
 
 User = get_user_model()
@@ -86,3 +87,29 @@ class RegistrationFormInstructor(UserCreationForm):
         if not user.groups.filter(name="instructors").exists():
             user.groups.add(Group.objects.get(name="instructors"))
         return user
+       
+
+class RegQuizenrolls(forms.Form):
+    quiz_id = forms.CharField(required=True)
+    
+    class Meta:
+        model = QuizEnroll
+        fields = [
+            "quiz_id",
+        ]
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(RegQuizenrolls, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        enrollment = self.Meta.model(quiz_id=Quiz.objects.get(id=self.cleaned_data["quiz_id"]))
+        enrollment.student_id = self.user
+
+        if commit:
+            enrollment.save()
+
+        return enrollment
+    def clean_quiz_id(self):
+        if len(Quiz.objects.filter(id=self.cleaned_data["quiz_id"])) == 0:
+            raise forms.ValidationError("Quiz id doesn't exists")
+        return self.cleaned_data["quiz_id"]
