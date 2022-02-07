@@ -1,6 +1,6 @@
 from optparse import Option
 from django.contrib import admin
-from .models import Options, Questions, Quiz, Users
+from .models import Options, Questions, Quiz, Users, QuizEnroll
 from django.utils.translation import ugettext_lazy as _
 from nested_inline.admin import (
     NestedModelAdmin,
@@ -9,7 +9,7 @@ from nested_inline.admin import (
 )
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.shortcuts import redirect
-
+from django.utils.crypto import get_random_string
 
 class UsersAdmin(BaseUserAdmin):
     fieldsets = (
@@ -47,7 +47,7 @@ class QuestionsInline(NestedStackedInline):
 class QuizAdmin(NestedModelAdmin):
     list_filter = ("is_active",)
     search_fields = ("name",)
-    readonly_fields = ("id","createdBy")
+    readonly_fields = ("createdBy",)
     exclude = []
     model = Quiz
     inlines = [QuestionsInline]
@@ -55,11 +55,15 @@ class QuizAdmin(NestedModelAdmin):
     def get_exclude(self, request, obj):
         if request.user.is_superuser:
             return super().get_exclude(request, obj)
-        return list(super().get_exclude(request, obj)).extend(['createdBy','created_at'])
+        return list(super().get_exclude(request, obj)).extend(['createdBy','created_at','id'])
 
     def save_model(self, request, obj, form, change):
         if not obj.pk and request.user.groups.filter(name='instructors').exists():
             obj.createdBy = request.user
+        id = get_random_string(6)
+        while len(self.model.objects.filter(id=id)) != 0 :
+            id = get_random_string(6)
+        obj.id = id
         super().save_model(request, obj, form, change)
 
     def get_queryset(self, request):
@@ -73,3 +77,4 @@ class QuizAdmin(NestedModelAdmin):
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Users, UsersAdmin)
+admin.site.register(QuizEnroll)
