@@ -151,3 +151,6 @@ TINYMCE_DEFAULT_CONFIG = {
     "fullscreen  preview save print | insertfile image media pageembed template link codesample | "
     "a11ycheck ltr rtl | showcomments addcomment code",
 }
+
+import django_heroku
+django_heroku.settings(locals())

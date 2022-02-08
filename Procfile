@@ -1,0 +1,1 @@
+web: gunicorn buzzquiz.lest_quiz.wsgi

@@ -15,3 +15,5 @@ six==1.16.0
 sqlparse==0.4.2
 typing-extensions==4.0.1
 webencodings==0.5.1
+gunicorn==20.1.0
+django-heroku==0.3.1
