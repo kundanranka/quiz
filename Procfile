@@ -1,1 +1,1 @@
-web: gunicorn buzzquiz.lest_quiz.wsgi
+web: gunicorn --pythonpath buzzquiz lest_quiz.wsgi
