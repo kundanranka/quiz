@@ -130,3 +130,24 @@
         display: none;
     }
 }
+
+.card-menu {
+    margin-top: 10px;
+    border-radius: 10px;
+}
+
+.card-body {
+    border-radius: 10px;
+    border-color: transparent;
+}
+
+.card-menu:hover {
+    box-shadow: 6px 15px 37px -12px rgba(0, 0, 0, 0.6);
+    -webkit-box-shadow: 6px 15px 37px -12px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: 6px 15px 37px -12px rgba(0, 0, 0, 0.6);
+}
+
+.active-card {
+    background-color: #6960f1!important;
+    color: #fff!important;
+}
