@@ -25,7 +25,7 @@
     color: #f5dd5d !important;
     font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
     font-weight: 300;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.2;
     text-decoration: none;
     transition: color 0.15s, background 0.15s;
@@ -48,10 +48,9 @@
     box-shadow: none;
 }
 
-@media (max-width: 768px) {
-    .breadcrumbs {
-        flex-wrap: wrap;
-    }
+.nav-brand-toggle {
+    display: flex;
+    justify-content: space-between;
 }
 
 .text-white {
@@ -118,4 +117,16 @@
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 768px) {
+    .breadcrumbs {
+        flex-wrap: wrap;
+    }
+    .nav-brand-toggle {
+        width: 100%;
+    }
+    .sidebar-img {
+        display: none;
+    }
 }

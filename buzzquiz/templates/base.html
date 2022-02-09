@@ -22,23 +22,26 @@
 <body class="bg-light">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark bg-pruple">
         <div class="container">
-            <h1>
-                <a href="{% url 'quiz:home' %}" class="navbar-brand">
-                    TechniQ Quizz
-                    {% if request.user.is_instructor %}
-                    - Instructor
-                    {% endif %}
-                </a>
-            </h1>
-            <button type="button" class="navbar-toggler toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-                <img src="https://avatars.dicebear.com/api/miniavs/{{request.user.email}}.svg" class="img-thumbnail rounded">
+            <div class="nav-brand-toggle">
+                <h1>
+                    <a href="{% url 'quiz:home' %}" class="navbar-brand">
+                        TechniQ Quizz
+                        {% if request.user.is_instructor %}
+                        - Instructor
+                        {% endif %}
+                    </a>
+                </h1>
+                <button type="button" class="navbar-toggler toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <img src="https://avatars.dicebear.com/api/miniavs/{{request.user.email}}.svg"
+                        class="img-thumbnail rounded">
                 </button>
+            </div>
             <div class="breadcrumbs collapse navbar-collapse justify-content-end" id="navbar">
                 {% if not request.user.is_active %}
                 <a href="{% url 'quiz:login' %}" class="btn btn-info mt-1"><i class="fa fa-sign-in"
                         aria-hidden="true"></i> Log In</a> {% else %}
                 <h6 class="text-white mt-2 mr-2">Welcome, {{ request.user.email }} | </h6>
-                <img src="https://avatars.dicebear.com/api/miniavs/{{request.user.email}}.svg" class="img-thumbnail rounded"> {% if request.user.is_instructor %}
+                <img src="https://avatars.dicebear.com/api/miniavs/{{request.user.email}}.svg" class="img-thumbnail rounded sidebar-img"> {% if request.user.is_instructor %}
                 <a href="{% url 'admin:quiz_quiz_add' %}" class="btn btn-success mt-1 mx-1">Add Quiz<i class=""
                         aria-hidden="true"></i></a> {% else %} <a href="{% url 'quiz:enroll' %}" class="btn btn-success mt-1 mx-1">Enroll Quiz<i class="" aria-hidden="true"></i></a> {% endif %}
 
