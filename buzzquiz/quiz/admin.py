@@ -58,7 +58,7 @@ class QuizAdmin(NestedModelAdmin):
         return list(super().get_exclude(request, obj)).extend(['createdBy','created_at','id'])
 
     def save_model(self, request, obj, form, change):
-        if not obj.pk and request.user.groups.filter(name='instructors').exists():
+        if request.user.groups.filter(name='instructors').exists():
             obj.createdBy = request.user
         id = get_random_string(6)
         while len(self.model.objects.filter(id=id)) != 0 :
