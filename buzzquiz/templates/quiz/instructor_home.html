@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block title %} TechniQ Quizz | Home {% endblock title %} {% block content %}
+<section style="margin-top:50px;">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card-menu " style="background-color:transparent; border: 1px solid blue;">
+                    <div class="card card-body">
+                        <h3><b><a href="completedquiz.html" style="text-decoration:none;color:black ">Completed
+                                    Quizzes</a></b></h3>
+                    </div>
+                    <div class="card-footer">
+                        <h1><b>{{ completed }}</b></h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col ">
+                <div class="card-menu active-card" style="background-color: transparent; border: 1px solid red;">
+                    <div class="card card-body">
+                        <h3><b><a href="Runningquiz.html" style="text-decoration:none;color:black ">Running Quizzes</a></b>
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h1><b>{{ running }}</b></h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-menu " style="background-color: transparent; border: 1px solid gold;">
+                    <div class="card card-body">
+                        <h3><b><a href="Upcomingquiz.html" style="text-decoration:none;color:black ">Upcoming
+                                    Quizzes</a></b></h3>
+                    </div>
+                    <div class="card-footer">
+                        <h1><b>{{ upcoming }}</b></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

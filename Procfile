@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath buzzquiz lets_quiz.wsgi
