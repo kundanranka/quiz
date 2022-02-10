@@ -39,6 +39,8 @@
 
 .toggler {
     border-color: transparent!important;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-toggler:focus,
