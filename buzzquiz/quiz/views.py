@@ -4,12 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from datetime import datetime
-from .models import Questions, Quiz
+from .models import Questions, Quiz, QuizEnroll
 from .forms import RegQuizenrolls, RegistrationFormInstructor, UserLoginForm, RegistrationFormStudent
 from django.contrib.auth.decorators import user_passes_test
 
 def home(request):
-    context = {}
     return redirect('/login')
 
 
@@ -45,6 +44,8 @@ def login_view(request):
         password = form.cleaned_data.get("password")
         user = authenticate(email=email, password=password)
         login(request, user)
+        if request.GET['next']:
+            return redirect(request.GET['next'])
         return redirect('/user-home')
     return render(request, 'quiz/login.html', {"form": form, "title": title})
 
@@ -91,3 +92,9 @@ def RegQuizenroll(request):
     context = {'form': form, 'title': title}
     return render(request, 'quiz/enroll.html', context=context)
 
+@login_required()
+def RegQuizenrollURL(request,quiz):
+    if request.user.is_instructor == True:
+        return redirect('/')
+    QuizEnroll.objects.get_or_create(quiz_id=Quiz(id=quiz),student_id=request.user)
+    return redirect('/')

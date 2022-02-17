@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.urls import path
 from . import views
 from django.contrib import admin
 
@@ -14,5 +15,6 @@ urlpatterns = [
     url(r'^logout/', views.logout_view, name='logout'),
     url(r'^register/', views.register_student, name='register'),
     url(r'^register-instructor/', views.register_instructor, name='register-instructor'),
+    path('enroll/<slug:quiz>/',views.RegQuizenrollURL),
     url(r'^enroll/', views.RegQuizenroll, name='enroll'),
 ]
