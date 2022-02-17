@@ -3,39 +3,68 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <div class="card-menu " style="background-color:transparent; border: 1px solid blue;">
+                <div class="card-menu {% if completed.filter %} active-card {% endif %}" style="background-color:transparent; border: 1px solid blue;">
                     <div class="card card-body">
-                        <h3><b><a href="completedquiz.html" style="text-decoration:none;color:black ">Completed
+                        <h3><b><a href="/instructor?filter=completed"
+                                    style="text-decoration:none;color:black ">Completed
                                     Quizzes</a></b></h3>
                     </div>
                     <div class="card-footer">
-                        <h1><b>{{ completed }}</b></h1>
+                        <h1><b>{{ completed.completedCount }}</b></h1>
                     </div>
                 </div>
             </div>
             <div class="col ">
-                <div class="card-menu active-card" style="background-color: transparent; border: 1px solid red;">
+                <div class="card-menu {% if running.filter %} active-card {% endif %}" style="background-color: transparent; border: 1px solid red;">
                     <div class="card card-body">
-                        <h3><b><a href="Runningquiz.html" style="text-decoration:none;color:black ">Running Quizzes</a></b>
+                        <h3><b><a href="instructor?filter=running" style="text-decoration:none;color:black ">Running
+                                    Quizzes</a></b>
                         </h3>
                     </div>
                     <div class="card-footer">
-                        <h1><b>{{ running }}</b></h1>
+                        <h1><b>{{ running.runningCount }}</b></h1>
                     </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card-menu " style="background-color: transparent; border: 1px solid gold;">
+                <div class="card-menu {% if upcoming.filter %} active-card {% endif %}" style="background-color: transparent; border: 1px solid gold;">
                     <div class="card card-body">
-                        <h3><b><a href="Upcomingquiz.html" style="text-decoration:none;color:black ">Upcoming
+                        <h3><b><a href="instructor?filter=upcoming" style="text-decoration:none;color:black ">Upcoming
                                     Quizzes</a></b></h3>
                     </div>
                     <div class="card-footer">
-                        <h1><b>{{ upcoming }}</b></h1>
+                        <h1><b>{{ upcoming.upcomingCount }}</b></h1>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="container">
+        {% for quiz in selected %}
+        <div class="row quiz-row">
+            <div class="col mb-4 quiz-select">
+                <div class="card textwhite bg-primary text-white shadow card-body-quiz">
+                    <div class="card-body textwhite text-white">
+                        <p class="m-0">{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }} - {{ quiz.start_time }}</p>
+                        <p class="text-white-50 small m-0">{{ quiz.description }}</p>
+                    </div>
+                    <div class="align-left">
+                        <a href="/admin/quiz/quiz/{{ quiz.id }}/change/" class="btn btn-danger">Edit <i
+                                class="fa fa-edit"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %} {% if selected.count == 0 %}
+        <div class="col">
+            <div class="text-center">
+                <h3>Want to schedule a quiz?</h3>
+                <a href="{% url 'admin:quiz_quiz_add' %}" class="btn btn-success mt-1 mx-1">Add Quiz<i class=""
+                            aria-hidden="true"></i></a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
     </div>
 </section>
 

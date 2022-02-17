@@ -143,6 +143,10 @@
     border-color: transparent;
 }
 
+.card-body p {
+    margin-top: 5px!important;
+}
+
 .card-menu:hover {
     box-shadow: 6px 15px 37px -12px rgba(0, 0, 0, 0.6);
     -webkit-box-shadow: 6px 15px 37px -12px rgba(0, 0, 0, 0.6);
@@ -152,4 +156,27 @@
 .active-card {
     background-color: #6960f1!important;
     color: #fff!important;
+}
+
+.quiz-select {
+    padding: 25px;
+    margin-top: 25px;
+    margin-bottom: 0px!important;
+    font-size: large;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.card-body-quiz {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.align-left {
+    margin-right: 20px;
+}
+
+.text-center {
+    margin-top: 20px;
 }
