@@ -180,3 +180,8 @@
 .text-center {
     margin-top: 20px;
 }
+
+.btn-take-quiz {
+    background-color: #655de9!important;
+    color: white!important;
+}

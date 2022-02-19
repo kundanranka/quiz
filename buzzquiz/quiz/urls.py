@@ -16,5 +16,7 @@ urlpatterns = [
     url(r'^register/', views.register_student, name='register'),
     url(r'^register-instructor/', views.register_instructor, name='register-instructor'),
     path('enroll/<slug:quiz>/',views.RegQuizenrollURL),
+    path('quiz/<slug:quiz>/start/',views.quiz),
+    path('quiz/<slug:quiz>/mock/',views.mock),
     url(r'^enroll/', views.RegQuizenroll, name='enroll'),
 ]

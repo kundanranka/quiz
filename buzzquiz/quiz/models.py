@@ -1,9 +1,12 @@
+from tkinter import CASCADE
+from click import option
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+
 from .manager import UserManager
 from tinymce.models import HTMLField
 
@@ -86,3 +89,8 @@ class QuizEnroll(models.Model):
     class Meta:
         verbose_name = _('Enrollment')
         verbose_name_plural = _('Enrollments')
+
+class Answers(models.Model):
+    question = models.ForeignKey(Questions,on_delete=models.CASCADE)
+    option = models.ForeignKey(Options,on_delete=models.CASCADE)
+    user = models.ForeignKey(Users,on_delete=models.CASCADE)

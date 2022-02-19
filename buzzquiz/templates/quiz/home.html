@@ -1,16 +1,71 @@
 {% extends 'base.html' %} {% block title %} TechniQ Quizz | Home {% endblock title %} {% block content %}
 
-<section id="section-jumbotron" class="jumbotron jumbotron-fluid d-flex justify-content-center align-items-center">
-    <div class="container text-center">
-        <h1 class="display-1 text-info">TechniQ Quizz</h1>
-        <p class="display-4 d-none d-sm-block">Test your skills and become a master.</p>
-        <p class="lead">We organize quizzes on various topics.</p>
-
-        {% if not request.user.is_active %}
-
-        <p class="lead">Sign up if you haven't already and get access to millions of quizzes on the topic of your interest.</p>
-        <p><strong> Start Your Journey Here:</strong></p>
-        <a href="{% url 'quiz:register' %}" class="btn btn-lg btn-info mt-1"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a> {% endif %}
+<section style="margin-top:50px;">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card-menu {% if completed.filter %} active-card {% endif %}" style="background-color:transparent; border: 1px solid blue;">
+                    <div class="card card-body">
+                        <h3><b><a href="?filter=completed"
+                                    style="text-decoration:none;color:black ">Completed
+                                    Quizzes</a></b></h3>
+                    </div>
+                    <div class="card-footer">
+                        <h1><b>{{ completed.completedCount }}</b></h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col ">
+                <div class="card-menu {% if running.filter %} active-card {% endif %}" style="background-color: transparent; border: 1px solid red;">
+                    <div class="card card-body">
+                        <h3><b><a href="?filter=running" style="text-decoration:none;color:black ">Running
+                                    Quizzes</a></b>
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h1><b>{{ running.runningCount }}</b></h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-menu {% if upcoming.filter %} active-card {% endif %}" style="background-color: transparent; border: 1px solid gold;">
+                    <div class="card card-body">
+                        <h3><b><a href="?filter=upcoming" style="text-decoration:none;color:black ">Upcoming
+                                    Quizzes</a></b></h3>
+                    </div>
+                    <div class="card-footer">
+                        <h1><b>{{ upcoming.upcomingCount }}</b></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {% for quiz in selected %}
+        <div class="row quiz-row">
+            <div class="col mb-4 quiz-select">
+                <div class="card textwhite bg-primary text-white shadow card-body-quiz">
+                    <div class="card-body textwhite text-white">
+                        <p class="m-0">{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.end_date }} - {{ quiz.end_time }}</p>
+                        <p class="text-white-50 small m-0">{{ quiz.description }}</p>
+                    </div>
+                    <div class="align-left">
+                        <a href="/quiz/{{ quiz.id }}/mock/" class="btn btn-dark">Mock Quiz</a>
+                        <a href="/quiz/{{ quiz.id }}/start/" class="btn btn-success">Take Quiz <i
+                                class="fa fa-play"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %} {% if selected.count == 0 %}
+        <div class="col">
+            <div class="text-center">
+                <h3>No quiz have been enrolled here, Have a code?</h3>
+                <a href="{% url 'quiz:enroll' %}" class="btn btn-success mt-1 mx-1">Enroll Quiz</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
     </div>
 </section>
 
