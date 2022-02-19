@@ -1,2 +1,2 @@
-release: python manage.py makemigrations quiz && python manage.py migrate quiz
+release: python buzzquiz/manage.py makemigrations quiz && python buzzquiz/manage.py migrate quiz
 web: gunicorn --pythonpath buzzquiz lets_quiz.wsgi
