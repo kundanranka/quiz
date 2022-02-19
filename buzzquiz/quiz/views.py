@@ -174,7 +174,11 @@ def quiz(request, quiz):
 def mock(request, quiz):
     
     if request.method == 'POST':
-        keys = list(request.POST.keys())[1:]
+        question = Questions.objects.get(id=request.POST.get("questionid",None))
+        if question.type == "Single Correct":
+            keys = [request.POST.get("option",None)]
+        else:
+            keys = list(request.POST.keys())[1:]
         for option in Options.objects.filter(id__in=keys):
             if len(Answers.objects.filter(question=option.question)) == 0:
                 Answers(question=option.question,option=option,user=request.user).save()

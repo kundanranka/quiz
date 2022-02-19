@@ -45,6 +45,7 @@
     </div>
     <form method="POST">
         {% csrf_token %}
+        <input type="hidden" name="questionid" value="{{ question.id }}">
         <div class="form-check" style="margin-left: 8%;">
             {% for option in options %} {% if question.type == 'Multiple Correct' %}
             <div style="padding-top: 1%">
@@ -55,7 +56,7 @@
             </div>
             {% else %}
             <div style="padding-top: 1%">
-                <br><input type="radio" class="form-check-input" name="{{ option.id }}">
+                <br><input type="radio" class="form-check-input" value="{{ option.id }}" name="option">
                 <label class="form-check-label" for="check1">
                         <p>{{ option.option|safe }}</p>
                     </label><br>
