@@ -2,46 +2,62 @@
 
 <section style="margin-top:50px;">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-6-lg mt-1">
+        <div class="row" style="justify-content: center;">
+            <div class="row">
                 <span class="float-start" style="border:2px;">
-                    <div class="rounded p-1" style="border:darkslateblue solid 4px;padding-top:10px!important;">
-                        <h6 class="b1">1/25</h6>
+                    <div class="rounded p-1"
+                        style="border:darkslateblue solid 4px;display: flex;align-items: center;height: 60px;width: 60px;justify-content: center;">
+                        <h6 style="margin-bottom: 0px!important;"> 1/25</h6>
                     </div>
                 </span>
-                <span class="float-end  mx-4">
-                    <div class=" rounded p-1" style="border:darkslateblue solid 4px;">
-                        <h6 class="b1" id="quiz_time">60:00</h6>
+                <span class="float-end">
+                    <div class="rounded p-1"
+                        style="border:darkslateblue solid 4px;display: flex;align-items: center;height: 60px;width: 60px;justify-content: center;">
+                        <h6 style="margin-bottom: 0px!important;" id="quiz_time">60:00</h6>
                     </div>
                 </span>
             </div>
         </div>
+        <br>
         <div class="row">
-            <div class="col-6 mt-1">
+            <div class="col-6" style="display: flex;align-items: center;flex-direction: row-reverse;">
                 <p class="h3" style="text-align:end;margin-top:0%"><b>Question:</b>
                 </p>
             </div>
             <div class="col-6">
-                <p class="b1 float-start rounded p-1" id="ques_time" style="border:darkslateblue solid 4px;">00:13</p>
+                <p class="b1 float-start rounded p-1" id="ques_time" style="border:darkslateblue solid 4px;display: flex;align-items: center;height: 60px;width: 60px;    justify-content: center;">00:00</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-10 mx-auto d-block mt-1" id="Ques" style="min-height:5vh;border: solid;border-radius:5px;border-color: black;background-color:white;">
+            <div class="col-10 mx-auto d-block mt-1" id="Ques" style="min-height:5vh;border: solid;border-radius:5px;border-color: black;background-color:white;padding: 20px;margin-bottom: 10px;">
                 {{ question.question|safe }}
             </div>
         </div>
-    </div>
-    <button type="button" class="btn btn-primary btn-sm float-end my-1 p-1" id="toastbtn" style="margin-right: 10%;">
-        <h5 class="b1">Hint</h5>
-    </button>
-    <div class="toast float-end">
-        <div class="toast-header">
-            <strong class="me-auto">Hint</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        {% if question.hint != "" %}
+        <div class="row" style="display: flex; flex-direction: row-reverse;">
+            <button type="button" class="btn btn-primary btn-sm float-end my-1 p-1" id="toastbtn" data-toggle="modal" data-target="#hintmodal" style="margin-right: 10%;width: 70px;">
+                <h5 style="margin-bottom: 5px!important;">Hint</h5>
+            </button>
         </div>
-        <div class="toast-body">
-            {{ question.hint }}
+        <div class="modal fade" id="hintmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Hint</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ question.hint|safe }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
+        {% endif %}
     </div>
     <form method="POST">
         {% csrf_token %}
@@ -49,22 +65,22 @@
         <div class="form-check" style="margin-left: 8%;">
             {% for option in options %} {% if question.type == 'Multiple Correct' %}
             <div style="padding-top: 1%">
-                <br><input type="checkbox" class="form-check-input" id="check1" name="{{ option.id }}">
-                <label class="form-check-label" for="check1">
-                        <p>{{ option.option|safe }}</p>
-                    </label><br>
+                <br><input type="checkbox" class="form-check-input" id="{{ option.id }}" name="{{ option.id }}">
+                <label class="form-check-label" for="{{ option.id }}">
+                    <p>{{ option.option|safe }}</p>
+                </label><br>
             </div>
             {% else %}
             <div style="padding-top: 1%">
-                <br><input type="radio" class="form-check-input" value="{{ option.id }}" name="option">
-                <label class="form-check-label" for="check1">
-                        <p>{{ option.option|safe }}</p>
-                    </label><br>
+                <br><input type="radio" class="form-check-input" value="{{ option.id }}" id="{{ option.id }}" name="option">
+                <label class="form-check-label" for="{{ option.id }}">
+                    <p>{{ option.option|safe }}</p>
+                </label><br>
             </div>
             {% endif %} {% endfor %}
         </div>
         <div class="container-fluid mt-3" style="padding-left: 48%;">
-            <button type="submit" class="btn btn-outline-primary">NEXT</button>
+            <button type="submit" id="next" class="btn btn-outline-primary">NEXT</button>
         </div>
     </form>
     <script>
@@ -81,7 +97,7 @@
                 display.textContent = minutes + ":" + seconds;
 
                 if (--timer < 0) {
-                    timer = duration;
+                    document.getElementById("next").click();
                 }
             }, 1000);
         }
@@ -93,18 +109,10 @@
         };
 
         window.onload = function() {
-            var ques_time = (60 * 1) - 1,
+            var ques_time = {{question.duration}};
                 display = document.querySelector('#ques_time');
             startTimer(ques_time, display);
         };
-
-        document.getElementById("toastbtn").onclick = function() {
-            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-            var toastList = toastElList.map(function(toastEl) {
-                return new bootstrap.Toast(toastEl)
-            })
-            toastList.forEach(toast => toast.show())
-        }
     </script>
 
 </section>

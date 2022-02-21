@@ -89,5 +89,5 @@ class QuizEnroll(models.Model):
 
 class Answers(models.Model):
     question = models.ForeignKey(Questions,on_delete=models.CASCADE)
-    option = models.ForeignKey(Options,on_delete=models.CASCADE)
+    option = models.ForeignKey(Options,on_delete=models.CASCADE,null=True)
     user = models.ForeignKey(Users,on_delete=models.CASCADE)
