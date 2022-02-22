@@ -33,7 +33,7 @@
                 {{ question.question|safe }}
             </div>
         </div>
-        {% if question.hint != "" %}
+        {% if question.hint != None %}
         <div class="row" style="display: flex; flex-direction: row-reverse;">
             <button type="button" class="btn btn-primary btn-sm float-end my-1 p-1" id="toastbtn" data-toggle="modal" data-target="#hintmodal" style="margin-right: 10%;width: 70px;">
                 <h5 style="margin-bottom: 5px!important;">Hint</h5>
@@ -84,10 +84,14 @@
         </div>
     </form>
     <script>
+        var flag = 0;
         function startTimer(duration, display) {
             var timer = duration,
                 minutes, seconds;
             setInterval(function() {
+                if(flag == 1){
+                    return ;
+                }
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
 
@@ -98,6 +102,7 @@
 
                 if (--timer < 0) {
                     document.getElementById("next").click();
+                    flag = 1;
                 }
             }, 1000);
         }
