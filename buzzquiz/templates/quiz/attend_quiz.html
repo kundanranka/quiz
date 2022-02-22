@@ -86,12 +86,12 @@
     <script>
         var flag = 0;
         function startTimer(duration, display) {
-            if(flag == 1){
-                return ;
-            }
             var timer = duration,
                 minutes, seconds;
             setInterval(function() {
+                if(flag == 1){
+                    return ;
+                }
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
 
