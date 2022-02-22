@@ -121,18 +121,6 @@
     -webkit-font-smoothing: antialiased;
 }
 
-@media (max-width: 768px) {
-    .breadcrumbs {
-        flex-wrap: wrap;
-    }
-    .nav-brand-toggle {
-        width: 100%;
-    }
-    .sidebar-img {
-        display: none;
-    }
-}
-
 .card-menu {
     margin-top: 10px;
     border-radius: 10px;
@@ -184,4 +172,20 @@
 .btn-take-quiz {
     background-color: #655de9!important;
     color: white!important;
+}
+
+@media (max-width: 768px) {
+    .breadcrumbs {
+        flex-wrap: wrap;
+    }
+    .nav-brand-toggle {
+        width: 100%;
+    }
+    .sidebar-img {
+        display: none;
+    }
+    .card-body-quiz {
+        flex-direction: column;
+        padding-bottom: 30px;
+    }
 }

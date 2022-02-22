@@ -45,7 +45,7 @@
             <div class="col mb-4 quiz-select">
                 <div class="card textwhite bg-primary text-white shadow card-body-quiz">
                     <div class="card-body textwhite text-white">
-                        <p class="m-0">{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }} - {{ quiz.start_time }}</p>
+                        <p class="m-0">{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }} - {{ quiz.start_time }} &nbsp;<i class="fa fa-solid fa-clipboard" onclick="copylinktoclipboard('{{ quiz.id }}',this)"></i></p>
                         <p class="text-white-50 small m-0">{{ quiz.description }}</p>
                     </div>
                     <div class="align-left">
@@ -67,5 +67,10 @@
     </div>
     </div>
 </section>
-
+<script>
+    function copylinktoclipboard(id, ele) {
+        navigator.clipboard.writeText(window.location.origin + "/enroll/" + id + "/");
+        ele.className = 'fa fa-check';
+    }
+</script>
 {% endblock content %}
