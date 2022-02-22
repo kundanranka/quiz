@@ -66,12 +66,12 @@ class Questions(models.Model):
     type = models.CharField(max_length=100,null=False,blank=False,choices=type)
     mark = models.IntegerField(null=False,blank=False)
     negative_mark = models.IntegerField(null=False,blank=False,default=0)
-    hint = models.CharField(max_length=500,null=False,default="")
+    hint = models.CharField(max_length=500,null=True,blank=True)
     mock = models.BooleanField(default=False)
 
 class Options(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.CASCADE,related_name='option_question')
-    option = models.CharField(max_length=100,null=False,blank=False)
+    option = HTMLField(null=False,blank=False)
     is_correct = models.BooleanField(default=False)
 
     class Meta:
