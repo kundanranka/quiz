@@ -51,6 +51,10 @@
                     <div class="align-left">
                         <a href="/admin/quiz/quiz/{{ quiz.id }}/change/" class="btn btn-danger">Edit <i
                                 class="fa fa-edit"></i></a>
+                    {% if completed.filter %}
+                        <a href="/{{ quiz.id }}/analytics/" class="btn btn-warning">Analytics <i
+                                class="fa fa-lock"></i></a>
+                    {% endif %}
                     </div>
                 </div>
             </div>
