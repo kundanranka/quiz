@@ -46,13 +46,15 @@
             <div class="col mb-4 quiz-select">
                 <div class="card textwhite bg-primary text-white shadow card-body-quiz">
                     <div class="card-body textwhite text-white">
-                        <p class="m-0">{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.end_date }} - {{ quiz.end_time }}</p>
-                        <p class="text-white-50 small m-0">{{ quiz.description }}</p>
+                        <p class="m-0">{{ quiz.quiz_id.name }} ({{ quiz.quiz_id.id }}) - {{ quiz.quiz_id.end_date }} - {{ quiz.quiz_id.end_time }}</p>
+                        <p class="text-white-50 small m-0">{{ quiz.quiz_id.description }}</p>
                     </div>
                     <div class="align-left">
-                        <a href="/quiz/{{ quiz.id }}/mock/" class="btn btn-dark">Mock Quiz</a>
-                        <a href="/quiz/{{ quiz.id }}/start/" class="btn btn-success">Take Quiz <i
-                                class="fa fa-play"></i></a>
+                        {% if not quiz.attended %} {% if running.filter %}
+                        <a href="/quiz/{{ quiz.quiz_id.id }}/mock/" class="btn btn-dark">Mock Quiz</a>
+                        <a href="/quiz/{{ quiz.quiz_id.id }}/start/" class="btn btn-success">Take Quiz <i
+                                    class="fa fa-play"></i></a> {% endif %} {% elif quiz.attended and completed.filter %}
+                        <a class="btn btn-warning" href="/quiz/{{ quiz.quiz_id.id }}/answer-key/">{{ quiz.mark }}</a> {% endif %}
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from datetime import datetime
-from .models import Answers, Options, Questions, Quiz, QuizEnroll
+from .models import Answers, Options, Questions, Quiz, QuizEnroll, Users
 from .forms import (
     RegQuizenrolls,
     RegistrationFormInstructor,
@@ -27,18 +27,20 @@ def user_home(request):
     quizs = list(
         map(lambda x: x.quiz_id.id, QuizEnroll.objects.filter(student_id=request.user))
     )
-    queryset = Quiz.objects.filter(id__in=quizs, is_active=True)
+    queryset = QuizEnroll.objects.filter(
+        quiz_id__is_active=True, student_id=request.user
+    )
     contex = {
         "completed": {
-            "completedCount": queryset.filter(end_date__lt=now).count(),
+            "completedCount": queryset.filter(quiz_id__end_date__lt=now).count(),
         },
         "running": {
             "runningCount": queryset.filter(
-                end_date__gte=now, start_date__lte=now
+                quiz_id__end_date__gte=now, quiz_id__start_date__lte=now
             ).count(),
         },
         "upcoming": {
-            "upcomingCount": queryset.filter(start_date__gt=now).count(),
+            "upcomingCount": queryset.filter(quiz_id__start_date__gt=now).count(),
         },
     }
     filter = request.GET.get("filter", None)
@@ -47,17 +49,17 @@ def user_home(request):
     if filter == "running":
         contex["running"]["filter"] = True
         contex["selected"] = queryset.filter(
-            end_date__gte=now, start_date__lte=now
-        ).order_by("start_date", "start_time")
+            quiz_id__end_date__gte=now, quiz_id__start_date__lte=now
+        ).order_by("quiz_id__start_date", "quiz_id__start_time")
     if filter == "upcoming":
         contex["upcoming"]["filter"] = True
-        contex["selected"] = queryset.filter(start_date__gt=now).order_by(
-            "start_date", "start_time"
+        contex["selected"] = queryset.filter(quiz_id__start_date__gt=now).order_by(
+            "quiz_id__start_date", "quiz_id__start_time"
         )
     if filter == "completed":
         contex["completed"]["filter"] = True
-        contex["selected"] = queryset.filter(end_date__lt=now).order_by(
-            "start_date", "start_time"
+        contex["selected"] = queryset.filter(quiz_id__end_date__lt=now).order_by(
+            "quiz_id__start_date", "quiz_id__start_time"
         )
     return render(request, "quiz/home.html", context=contex)
 
@@ -176,13 +178,33 @@ def RegQuizenrollURL(request, quiz):
     return redirect("/")
 
 
+def calculate_mark(user: Users, quiz: Quiz):
+    mark = 0
+    for answer in Answers.objects.filter(user=user, question__quiz=quiz).exclude(
+        option=None
+    ):
+        if answer.question.type == "Single Correct":
+            if answer.option.is_correct == True:
+                mark += answer.question.mark
+            else:
+                if answer.question.negative_mark != None:
+                    mark -= answer.question.negative_mark
+        if answer.question.type == "Multiple Correct":
+            total_options = Options.objects.filter(
+                question=answer.question, is_correct=True
+            ).count()
+            if answer.option.is_correct == True:
+                mark += answer.question.mark / total_options
+    QuizEnroll.objects.filter(student_id=user, quiz_id=quiz).update(mark=mark)
+
+
 @login_required()
 @user_passes_test(lambda user: not user.is_instructor, login_url="/user-home")
 def quiz(request, quiz):
     if request.method == "POST":
         question = Questions.objects.get(id=request.POST.get("questionid", None))
         if question.type == "Single Correct":
-            keys = [request.POST.get("option", None)] 
+            keys = [request.POST.get("option", None)]
         else:
             keys = list(request.POST.keys())[2:]
         flag = 0
@@ -193,9 +215,7 @@ def quiz(request, quiz):
                     question=option.question, option=option, user=request.user
                 ).save()
         if flag == 0:
-            Answers(
-                    question=question,option=None, user=request.user
-                ).save()
+            Answers(question=question, option=None, user=request.user).save()
     selected_quiz = Quiz.objects.get(id=quiz)
     answered = [
         x.question.id for x in Answers.objects.filter(question__quiz=selected_quiz)
@@ -205,6 +225,10 @@ def quiz(request, quiz):
     )
     question_to_attend = questions.first()
     if question_to_attend == None:
+        calculate_mark(request.user, selected_quiz)
+        QuizEnroll.objects.filter(
+            student_id=request.user, quiz_id=selected_quiz
+        ).update(attended=True)
         return redirect("/")
     options = Options.objects.filter(question=question_to_attend)
     return render(
@@ -212,7 +236,6 @@ def quiz(request, quiz):
         "quiz/attend_quiz.html",
         context={"question": question_to_attend, "options": options},
     )
-
 
 
 @login_required()
@@ -232,9 +255,7 @@ def mock(request, quiz):
                     question=option.question, option=option, user=request.user
                 ).save()
         if flag == 0:
-            Answers(
-                    question=question,option=None, user=request.user
-                ).save()
+            Answers(question=question, option=None, user=request.user).save()
     selected_quiz = Quiz.objects.get(id=quiz)
     answered = [
         x.question.id for x in Answers.objects.filter(question__quiz=selected_quiz)
@@ -252,3 +273,17 @@ def mock(request, quiz):
         "quiz/attend_quiz.html",
         context={"question": question_to_attend, "options": options},
     )
+
+
+@login_required()
+@user_passes_test(lambda user: not user.is_instructor, login_url="/user-home")
+def answer_key(request, quiz):
+    selected_quiz = Quiz.objects.get(id=quiz)
+    questions = Questions.objects.filter(quiz=selected_quiz, mock=False)
+    context = {
+        "questions": [],
+    }
+    for question in questions:
+        options = Options.objects.filter(question=question)
+        context["questions"].append({"question": question, "options": options})
+    return render(request, "quiz/answer_key.html", context=context)

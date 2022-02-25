@@ -82,10 +82,14 @@ class Options(models.Model):
 class QuizEnroll(models.Model):
     quiz_id = models.ForeignKey(Quiz, on_delete=models.CASCADE,related_name='quiz_id')
     student_id = models.ForeignKey(Users, on_delete=models.CASCADE,related_name='student_id')
+    attended = models.BooleanField(default=False)
+    mark = models.FloatField(null=True,blank=True,default=None)
  
     class Meta:
         verbose_name = _('Enrollment')
         verbose_name_plural = _('Enrollments')
+    def __str__(self):
+        return str(self.quiz_id.id) + " - " + str(self.student_id)
 
 class Answers(models.Model):
     question = models.ForeignKey(Questions,on_delete=models.CASCADE)
