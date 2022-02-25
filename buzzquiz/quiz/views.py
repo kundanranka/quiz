@@ -179,19 +179,45 @@ def RegQuizenrollURL(request, quiz):
 @login_required()
 @user_passes_test(lambda user: not user.is_instructor, login_url="/user-home")
 def quiz(request, quiz):
-    if (
-        QuizEnroll.objects.filter(quiz_id__id=quiz, student_id=request.user).count()
-        == 0
-    ):
-        return  # TODO Failure of
-    pass
-    return redirect("/")
+    if request.method == "POST":
+        question = Questions.objects.get(id=request.POST.get("questionid", None))
+        if question.type == "Single Correct":
+            keys = [request.POST.get("option", None)] 
+        else:
+            keys = list(request.POST.keys())[2:]
+        flag = 0
+        for option in Options.objects.filter(id__in=keys):
+            if len(Answers.objects.filter(question=option.question)) == 0:
+                flag = 1
+                Answers(
+                    question=option.question, option=option, user=request.user
+                ).save()
+        if flag == 0:
+            Answers(
+                    question=question,option=None, user=request.user
+                ).save()
+    selected_quiz = Quiz.objects.get(id=quiz)
+    answered = [
+        x.question.id for x in Answers.objects.filter(question__quiz=selected_quiz)
+    ]
+    questions = Questions.objects.filter(quiz=selected_quiz, mock=False).exclude(
+        id__in=answered
+    )
+    question_to_attend = questions.first()
+    if question_to_attend == None:
+        return redirect("/")
+    options = Options.objects.filter(question=question_to_attend)
+    return render(
+        request,
+        "quiz/attend_quiz.html",
+        context={"question": question_to_attend, "options": options},
+    )
+
 
 
 @login_required()
 @user_passes_test(lambda user: not user.is_instructor, login_url="/user-home")
 def mock(request, quiz):
-
     if request.method == "POST":
         question = Questions.objects.get(id=request.POST.get("questionid", None))
         if question.type == "Single Correct":
