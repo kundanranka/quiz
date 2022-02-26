@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block title %} TechniQ Quizz | Home {% endblock title %} {% block content %}
+<section style="margin-top:50px;">
+    <div class="row d-flex justify-content-center">
+        <center>
+            <h2>{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }} - {{ quiz.start_time }}</h2>
+            <h5>Total Enrollments : {{ enrollments.count }}</h5>
+        </center>
+    </div>
+    {% if enrollments != 0 %}
+    <div class="row">
+        <div class="col">
+            <div>
+                <canvas id="pieChart" style="max-width: 500px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+    <script>
+        //pie
+        var ctxP = document.getElementById("pieChart").getContext('2d');
+        var myPieChart = new Chart(ctxP, {
+            type: 'pie',
+            data: {
+                labels: ["Attended", "Not Attended"],
+                datasets: [{
+                    data: [{{ attened }}, {{ not_attened }}],
+            backgroundColor: ["#F7464A", "#46BFBD"],
+            hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+        }]
+        },
+        options: {
+            responsive: true
+        }
+        });
+    </script>
+    {% endif %}
+
+    {% for enrollment in enrollments %}
+    <div class="row quiz-row">
+        <div class="col mb-4 quiz-select">
+            <div class="card shadow card-body-quiz">
+                <div class="card-body ">
+                    <p class="m-0">{{ enrollment.student_id.email }} - {{ enrollment.mark|floatformat:"0" }} / {{ total_marks }}</p>
+                </div>
+                <div class="align-left">
+                    <a href="" class="btn btn-warning">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endblock content %}

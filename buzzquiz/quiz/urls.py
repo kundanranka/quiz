@@ -19,5 +19,6 @@ urlpatterns = [
     path('quiz/<slug:quiz>/start/',views.quiz),
     path('quiz/<slug:quiz>/mock/',views.mock),
     path('quiz/<slug:quiz>/answer-key/',views.answer_key),
+    path('quiz/<slug:quiz>/analytics/',views.analytics),
     url(r'^enroll/', views.RegQuizenroll, name='enroll'),
 ]

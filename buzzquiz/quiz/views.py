@@ -287,3 +287,20 @@ def answer_key(request, quiz):
         options = Options.objects.filter(question=question)
         context["questions"].append({"question": question, "options": options})
     return render(request, "quiz/answer_key.html", context=context)
+
+@login_required()
+@user_passes_test(lambda user: user.is_instructor, login_url="/user-home")
+def analytics(request,quiz):
+    selected_quiz = Quiz.objects.get(id=quiz)
+    students = QuizEnroll.objects.filter(quiz_id=selected_quiz)
+    total_mark =0 
+    for Question in Questions.objects.filter(quiz=selected_quiz):
+        total_mark += Question.mark
+    context = {
+        "attened": students.filter(attended=True).count(),
+        "not_attened": students.filter(attended=False).count(),
+        "quiz" : selected_quiz,
+        "enrollments" : students,
+        "total_marks" : total_mark,
+    }
+    return render(request, "quiz/analytics.html", context=context)
