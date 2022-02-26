@@ -1,8 +1,8 @@
 {% extends 'base.html' %} {% block title %} TechniQ Quizz | Home {% endblock title %} {% block content %}
-<section style="margin-top:50px;">
+<section class="container" style="margin-top:50px;">
     <div class="row d-flex justify-content-center">
         <center>
-            <h2>{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }} - {{ quiz.start_time }}</h2>
+            <h2>{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }}</h2>
             <h5>Total Enrollments : {{ enrollments.count }}</h5>
         </center>
     </div>
@@ -23,28 +23,30 @@
             data: {
                 labels: ["Attended", "Not Attended"],
                 datasets: [{
-                    data: [{{ attened }}, {{ not_attened }}],
-            backgroundColor: ["#F7464A", "#46BFBD"],
-            hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
-        }]
-        },
-        options: {
-            responsive: true
-        }
+                    data: [{{attened}}, {{ not_attened }}],
+                    backgroundColor: ["#F7464A", "#46BFBD"],
+                    hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
         });
     </script>
-    {% endif %}
+    {% endif %} {% for enrollment in enrollments %}
 
-    {% for enrollment in enrollments %}
     <div class="row quiz-row">
         <div class="col mb-4 quiz-select">
             <div class="card shadow card-body-quiz">
                 <div class="card-body ">
-                    <p class="m-0">{{ enrollment.student_id.email }} - {{ enrollment.mark|floatformat:"0" }} / {{ total_marks }}</p>
+                    <p class="m-0">{{ enrollment.student_id.email }} - {% if enrollment.attended %} {{ enrollment.mark|floatformat:"0" }} / {{ total_marks }} {% else %} N/A {% endif %}
+                    </p>
                 </div>
+                {% if enrollment.attended %}
                 <div class="align-left">
-                    <a href="" class="btn btn-warning">View</a>
+                    <a href="/quiz/{{quiz.id}}/answer-key/?user={{ enrollment.student_id.email }}" class="btn btn-warning">View</a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

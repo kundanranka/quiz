@@ -45,16 +45,14 @@
             <div class="col mb-4 quiz-select">
                 <div class="card textwhite bg-primary text-white shadow card-body-quiz">
                     <div class="card-body textwhite text-white">
-                        <p class="m-0">{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }} - {{ quiz.start_time }} &nbsp;<i class="fa fa-solid fa-clipboard" onclick="copylinktoclipboard('{{ quiz.id }}',this)"></i></p>
+                        <p class="m-0">{{ quiz.name }} ({{ quiz.id }}) - {{ quiz.start_date }} &nbsp;<i class="fa fa-solid fa-clipboard" onclick="copylinktoclipboard('{{ quiz.id }}',this)"></i></p>
                         <p class="text-white-50 small m-0">{{ quiz.description }}</p>
                     </div>
                     <div class="align-left">
                         <a href="/admin/quiz/quiz/{{ quiz.id }}/change/" class="btn btn-danger">Edit <i
-                                class="fa fa-edit"></i></a>
-                    {% if completed.filter %}
+                                class="fa fa-edit"></i></a> {% if completed.filter %}
                         <a href="quiz/{{ quiz.id }}/analytics/" class="btn btn-warning">Analytics <i
-                                class="fa fa-lock"></i></a>
-                    {% endif %}
+                                class="fa fa-lock"></i></a> {% endif %}
                     </div>
                 </div>
             </div>

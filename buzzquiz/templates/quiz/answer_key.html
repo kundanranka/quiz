@@ -1,20 +1,20 @@
-{% extends 'base.html' %} {% block title %} TechniQ Quizz | Home {% endblock title %} {% block content %}
-
+{% extends 'base.html' %} {% block title %} TechniQ Quizz | Home {% endblock title %} {% block content %} {% load db_filters %}
 <section style="margin-top:50px;">
+    {% for question in questions %}
     <div class="container-fluid">
-        {% for question in questions %}
         <div class="row">
             <div class="col-10 mx-auto d-block mt-1" id="Ques" style="min-height:5vh;border: solid;border-radius:5px;border-color: black;background-color:white;padding: 20px;margin-bottom: 10px;">
-                {{ question.question.question|safe }}
+                {{ question.question.question|safe }}<br> Mark : {{ question.question.mark }}
             </div>
         </div>
+
     </div>
     <div class="form-check" style="margin-left: 8%;">
         {% for option in question.options %}
         <div style="padding-top: 1%">
-            <label class="form-check-label" for="{{ option.id }}" style="display: flex;">
-                    <p>{{ option.option|safe }} &nbsp;&nbsp; {% if option.is_correct %} <i class="fa fa-check"></i> {% endif %}</p>
-                </label><br>
+            <label class="form-check-label answer-key {% if option|is_selected:userid > 0 %} golden {% endif %}" for="{{ option.id }}" style="display: flex;">
+                <p>{{ option.option|safe }} &nbsp;&nbsp; {% if option.is_correct %} <i class="fa fa-check"></i> {% endif %}</p>
+            </label><br>
         </div>
         {% endfor %}
     </div>

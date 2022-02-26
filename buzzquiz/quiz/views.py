@@ -50,16 +50,16 @@ def user_home(request):
         contex["running"]["filter"] = True
         contex["selected"] = queryset.filter(
             quiz_id__end_date__gte=now, quiz_id__start_date__lte=now
-        ).order_by("quiz_id__start_date", "quiz_id__start_time")
+        ).order_by("quiz_id__start_date")
     if filter == "upcoming":
         contex["upcoming"]["filter"] = True
         contex["selected"] = queryset.filter(quiz_id__start_date__gt=now).order_by(
-            "quiz_id__start_date", "quiz_id__start_time"
+            "quiz_id__start_date"
         )
     if filter == "completed":
         contex["completed"]["filter"] = True
         contex["selected"] = queryset.filter(quiz_id__end_date__lt=now).order_by(
-            "quiz_id__start_date", "quiz_id__start_time"
+            "quiz_id__start_date"
         )
     return render(request, "quiz/home.html", context=contex)
 
@@ -90,16 +90,16 @@ def instructor_home(request):
         contex["running"]["filter"] = True
         contex["selected"] = queryset.filter(
             end_date__gte=now, start_date__lte=now
-        ).order_by("start_date", "start_time")
+        ).order_by("start_date")
     if filter == "upcoming":
         contex["upcoming"]["filter"] = True
         contex["selected"] = queryset.filter(start_date__gt=now).order_by(
-            "start_date", "start_time"
+            "start_date"
         )
     if filter == "completed":
         contex["completed"]["filter"] = True
         contex["selected"] = queryset.filter(end_date__lt=now).order_by(
-            "start_date", "start_time"
+            "start_date"
         )
 
     return render(request, "quiz/instructor_home.html", context=contex)
@@ -276,7 +276,6 @@ def mock(request, quiz):
 
 
 @login_required()
-@user_passes_test(lambda user: not user.is_instructor, login_url="/user-home")
 def answer_key(request, quiz):
     selected_quiz = Quiz.objects.get(id=quiz)
     questions = Questions.objects.filter(quiz=selected_quiz, mock=False)
@@ -286,6 +285,13 @@ def answer_key(request, quiz):
     for question in questions:
         options = Options.objects.filter(question=question)
         context["questions"].append({"question": question, "options": options})
+    if request.GET.get("user",None) == None:
+        context["userid"] = request.user.email
+    else:
+        if request.user.is_instructor == True:
+            context["userid"] = request.GET.get("user",None)
+        else:
+            context["userid"] = request.user.email
     return render(request, "quiz/answer_key.html", context=context)
 
 @login_required()
@@ -294,7 +300,7 @@ def analytics(request,quiz):
     selected_quiz = Quiz.objects.get(id=quiz)
     students = QuizEnroll.objects.filter(quiz_id=selected_quiz)
     total_mark =0 
-    for Question in Questions.objects.filter(quiz=selected_quiz):
+    for Question in Questions.objects.filter(quiz=selected_quiz,mock=False):
         total_mark += Question.mark
     context = {
         "attened": students.filter(attended=True).count(),
