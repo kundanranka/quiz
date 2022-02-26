@@ -218,7 +218,7 @@ def quiz(request, quiz):
             Answers(question=question, option=None, user=request.user).save()
     selected_quiz = Quiz.objects.get(id=quiz)
     answered = [
-        x.question.id for x in Answers.objects.filter(question__quiz=selected_quiz)
+        x.question.id for x in Answers.objects.filter(question__quiz=selected_quiz,user=request.user)
     ]
     questions = Questions.objects.filter(quiz=selected_quiz, mock=False).exclude(
         id__in=answered
