@@ -209,11 +209,11 @@ def quiz(request, quiz):
             keys = list(request.POST.keys())[2:]
         flag = 0
         for option in Options.objects.filter(id__in=keys):
-            if len(Answers.objects.filter(question=option.question)) == 0:
-                flag = 1
-                Answers(
-                    question=option.question, option=option, user=request.user
-                ).save()
+            # if len(Answers.objects.filter(question=option.question)) == 0:
+            flag = 1
+            Answers(
+                question=option.question, option=option, user=request.user
+            ).save()
         if flag == 0:
             Answers(question=question, option=None, user=request.user).save()
     selected_quiz = Quiz.objects.get(id=quiz)
