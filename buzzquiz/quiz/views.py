@@ -157,6 +157,7 @@ def logout_view(request):
 
 
 @login_required()
+@user_passes_test(lambda user: not user.is_instructor, login_url="/user-home")
 def RegQuizenroll(request):
     title = "Enroll Quiz"
     if request.method == "POST":
@@ -171,6 +172,7 @@ def RegQuizenroll(request):
 
 
 @login_required()
+@user_passes_test(lambda user: not user.is_instructor, login_url="/user-home")
 def RegQuizenrollURL(request, quiz):
     if request.user.is_instructor == True:
         return redirect("/")
