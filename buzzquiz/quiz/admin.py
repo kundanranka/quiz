@@ -75,6 +75,10 @@ class QuizAdmin(NestedModelAdmin):
 
     def response_add(self, request, obj, post_url_continue=None):
         return redirect('/user-home')
+    def response_change(self, request, obj):
+        return redirect('/user-home')
+    def response_delete(self, request, obj_display, obj_id):
+        return redirect('/user-home')
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Users, UsersAdmin)
