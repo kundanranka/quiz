@@ -2,22 +2,6 @@
 
 <section style="margin-top:50px;">
     <div class="container-fluid">
-        <div class="row" style="justify-content: center;">
-            <div class="row">
-                <span class="float-start" style="border:2px;">
-                    <div class="rounded p-1"
-                        style="border:darkslateblue solid 4px;display: flex;align-items: center;height: 60px;width: 60px;justify-content: center;">
-                        <h6 style="margin-bottom: 0px!important;"> 1/25</h6>
-                    </div>
-                </span>
-                <span class="float-end">
-                    <div class="rounded p-1"
-                        style="border:darkslateblue solid 4px;display: flex;align-items: center;height: 60px;width: 60px;justify-content: center;">
-                        <h6 style="margin-bottom: 0px!important;" id="quiz_time">60:00</h6>
-                    </div>
-                </span>
-            </div>
-        </div>
         <br>
         <div class="row">
             <div class="col-6" style="display: flex;align-items: center;flex-direction: row-reverse;">
@@ -85,12 +69,13 @@
     </form>
     <script>
         var flag = 0;
+
         function startTimer(duration, display) {
             var timer = duration,
                 minutes, seconds;
             setInterval(function() {
-                if(flag == 1){
-                    return ;
+                if (flag == 1) {
+                    return;
                 }
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
@@ -114,8 +99,12 @@
         };
 
         window.onload = function() {
-            var ques_time = {{question.duration}};
-                display = document.querySelector('#ques_time');
+            var ques_time = {
+                {
+                    question.duration
+                }
+            };
+            display = document.querySelector('#ques_time');
             startTimer(ques_time, display);
         };
     </script>
