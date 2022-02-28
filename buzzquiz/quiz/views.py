@@ -162,7 +162,7 @@ def RegQuizenroll(request):
     if request.method == "POST":
         form = RegQuizenrolls(request.user, request.POST)
         if form.is_valid():
-            form.save()
+            QuizEnroll.objects.get_or_create(quiz_id=Quiz(id=request.POST["quiz_id"]), student_id=request.user)
             return redirect("/")
     else:
         form = RegQuizenrolls(request.user)
@@ -223,14 +223,14 @@ def quiz(request, quiz):
     questions = Questions.objects.filter(quiz=selected_quiz, mock=False).exclude(
         id__in=answered
     )
-    question_to_attend = questions.first()
+    question_to_attend = questions.order_by('?').first()
     if question_to_attend == None:
         calculate_mark(request.user, selected_quiz)
         QuizEnroll.objects.filter(
             student_id=request.user, quiz_id=selected_quiz
         ).update(attended=True)
         return redirect("/")
-    options = Options.objects.filter(question=question_to_attend)
+    options = Options.objects.filter(question=question_to_attend).order_by('?')
     return render(
         request,
         "quiz/attend_quiz.html",
@@ -263,11 +263,11 @@ def mock(request, quiz):
     questions = Questions.objects.filter(quiz=selected_quiz, mock=True).exclude(
         id__in=answered
     )
-    question_to_attend = questions.first()
+    question_to_attend = questions.order_by('?').first()
     if question_to_attend == None:
         Answers.objects.filter(question__id__in=answered, user=request.user).delete()
         return redirect("/")
-    options = Options.objects.filter(question=question_to_attend)
+    options = Options.objects.filter(question=question_to_attend).order_by('?')
     return render(
         request,
         "quiz/attend_quiz.html",
